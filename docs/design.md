@@ -132,7 +132,6 @@ rest of the deployment configuration, not in this repo.
 - Does a streaming service's audio actually reach the sink monitor when played in
   Firefox? To be proved by test before building (video is DRM-protected; audio
   normally passes through the mixer).
-- Licence for this repository.
 
 ## Note on use
 
