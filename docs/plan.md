@@ -77,7 +77,7 @@ back with the film's audio. If it records silence, stop and revisit the design.
   `slice(start: int, end: int) -> tuple[bytes, int, bool]` returning
   `(pcm, actual_start_frame, truncated)`.
 
-- [ ] **Step 1: Scaffold**
+- [x] **Step 1: Scaffold**
 
 `pyproject.toml`:
 
@@ -131,7 +131,7 @@ __pycache__/
 Run: `uv sync`
 Expected: creates `.venv` and `uv.lock`; installs samplemark (editable) with the dev group.
 
-- [ ] **Step 2: Write the failing tests**
+- [x] **Step 2: Write the failing tests**
 
 `tests/test_ringbuffer.py`:
 
@@ -190,12 +190,12 @@ def test_single_write_larger_than_capacity():
     assert buf.slice(0, 9) == (frames(5, 4), 5, True)
 ```
 
-- [ ] **Step 3: Run to verify they fail**
+- [x] **Step 3: Run to verify they fail**
 
 Run: `uv run pytest tests/test_ringbuffer.py -v`
 Expected: FAIL (`ModuleNotFoundError: samplemark.ringbuffer`).
 
-- [ ] **Step 4: Implement**
+- [x] **Step 4: Implement**
 
 `src/samplemark/ringbuffer.py`:
 
@@ -256,12 +256,12 @@ class RingBuffer:
             return pcm, start, truncated
 ```
 
-- [ ] **Step 5: Run to verify they pass**
+- [x] **Step 5: Run to verify they pass**
 
 Run: `uv run pytest tests/test_ringbuffer.py -v`
 Expected: 6 passed.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add pyproject.toml uv.lock .gitignore src tests
@@ -282,7 +282,7 @@ git commit -m "Ring buffer and package scaffold"
   `<date>_<slug>_<NNN>`); `write_clip(outdir: Path, basename: str, pcm: bytes,
   rate: int, channels: int, sidecar: dict) -> Path` (returns the WAV path).
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/test_clips.py`:
 
@@ -319,12 +319,12 @@ def test_write_clip(tmp_path):
         "2026-11-17_alien_001.json", "2026-11-17_alien_001.wav"]
 ```
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `uv run pytest tests/test_clips.py -v`
 Expected: FAIL (`ModuleNotFoundError: samplemark.clips`).
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `src/samplemark/clips.py`:
 
@@ -371,12 +371,12 @@ def write_clip(outdir: Path, basename: str, pcm: bytes, rate: int,
     return wav_path
 ```
 
-- [ ] **Step 4: Run to verify they pass**
+- [x] **Step 4: Run to verify they pass**
 
 Run: `uv run pytest tests/test_clips.py -v`
 Expected: 3 passed.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/samplemark/clips.py tests/test_clips.py
@@ -401,7 +401,7 @@ git commit -m "Clip writer: atomic WAV and JSON sidecar"
   suspended sink (nothing playing) legitimately sends nothing. This narrows the
   design's "exits or stalls".
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/test_capture.py`:
 
@@ -448,12 +448,12 @@ def test_default_command_records_sink_monitor_raw():
     assert "stream.capture.sink=true" in DEFAULT_CAPTURE
 ```
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `uv run pytest tests/test_capture.py -v`
 Expected: FAIL (`ModuleNotFoundError: samplemark.capture`).
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `src/samplemark/capture.py`:
 
@@ -510,12 +510,12 @@ class Capture:
             self._thread.join(timeout=2)
 ```
 
-- [ ] **Step 4: Run to verify they pass**
+- [x] **Step 4: Run to verify they pass**
 
 Run: `uv run pytest tests/test_capture.py -v`
 Expected: 3 passed.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/samplemark/capture.py tests/test_capture.py
@@ -550,7 +550,7 @@ git commit -m "Capture: stream the capture command into the ring buffer"
     `pending_info(client: str) -> dict | None` (keys `seconds`, `truncated`),
     and attribute `session` (`None` when idle; has `.buffer`, `.capture`).
 
-- [ ] **Step 1: Test helpers**
+- [x] **Step 1: Test helpers**
 
 `tests/conftest.py`:
 
@@ -609,7 +609,7 @@ def make_manager(tmp_path, clock):
     return make
 ```
 
-- [ ] **Step 2: Write the failing tests**
+- [x] **Step 2: Write the failing tests**
 
 `tests/test_session.py`:
 
@@ -752,12 +752,12 @@ def test_discard(make_manager):
     assert m.marked_at("a") is None
 ```
 
-- [ ] **Step 3: Run to verify they fail**
+- [x] **Step 3: Run to verify they fail**
 
 Run: `uv run pytest tests/test_session.py -v`
 Expected: FAIL (`ModuleNotFoundError: samplemark.session`).
 
-- [ ] **Step 4: Implement**
+- [x] **Step 4: Implement**
 
 `src/samplemark/session.py`:
 
@@ -978,12 +978,12 @@ class Manager:
             return {"seconds": round(secs, 1), "truncated": p.truncated}
 ```
 
-- [ ] **Step 5: Run to verify they pass**
+- [x] **Step 5: Run to verify they pass**
 
 Run: `uv run pytest tests/test_session.py -v`
 Expected: 10 passed.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/samplemark/session.py tests/conftest.py tests/test_session.py
@@ -1006,7 +1006,7 @@ git commit -m "Session manager: marks per phone, clip slicing, positions"
   `/stop`, `/restart`. Every POST redirects (303) to `/?msg=…` or `/?error=…`.
   Cookies: `samplemark_client` (random id, set by `GET /`), `samplemark_name`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/test_app.py`:
 
@@ -1062,12 +1062,12 @@ def test_capture_down_offers_restart(make_manager):
     assert "running" in client.post("/restart").text
 ```
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `uv run pytest tests/test_app.py -v`
 Expected: FAIL (`ModuleNotFoundError: samplemark.app`).
 
-- [ ] **Step 3: Implement the page**
+- [x] **Step 3: Implement the page**
 
 `src/samplemark/templates/page.html`:
 
@@ -1143,7 +1143,7 @@ input, textarea { font-size: 1.1rem; width: 100%; box-sizing: border-box; margin
 </html>
 ```
 
-- [ ] **Step 4: Implement the app**
+- [x] **Step 4: Implement the app**
 
 `src/samplemark/app.py`:
 
@@ -1257,12 +1257,12 @@ def create_app(manager: Manager) -> FastAPI:
     return app
 ```
 
-- [ ] **Step 5: Run to verify they pass**
+- [x] **Step 5: Run to verify they pass**
 
 Run: `uv run pytest tests/test_app.py -v`
 Expected: 3 passed.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/samplemark/app.py src/samplemark/templates tests/test_app.py
@@ -1283,7 +1283,7 @@ git commit -m "Phone page: session, mark, save, sync, stop"
 - Produces: `build_parser() -> argparse.ArgumentParser`;
   `main(argv: list[str] | None = None) -> None`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `tests/test_cli.py`:
 
@@ -1311,12 +1311,12 @@ def test_environment(monkeypatch):
     assert (args.output, args.port, args.host) == (Path("/srv/inbox"), 9000, "0.0.0.0")
 ```
 
-- [ ] **Step 2: Run to verify they fail**
+- [x] **Step 2: Run to verify they fail**
 
 Run: `uv run pytest tests/test_cli.py -v`
 Expected: FAIL (`ModuleNotFoundError: samplemark.cli`).
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `src/samplemark/cli.py`:
 
@@ -1423,12 +1423,12 @@ variables. An example systemd user unit is in
 MIT. Clips of films and shows are copyrighted; keep to short excerpts for personal use.
 ````
 
-- [ ] **Step 4: Run the whole suite**
+- [x] **Step 4: Run the whole suite**
 
 Run: `uv run pytest -v`
 Expected: all tests pass (6 + 3 + 3 + 10 + 3 + 2 = 27).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/samplemark/cli.py src/samplemark/__main__.py docs/samplemark.service README.md tests/test_cli.py
