@@ -1,0 +1,12 @@
+[Unit]
+Description=samplemark: mark and save audio samples
+After=pipewire.service
+
+[Service]
+Environment=SAMPLEMARK_HOST=0.0.0.0
+Environment=SAMPLEMARK_OUTPUT=%h/samplemark-inbox
+ExecStart=%h/src/samplemark/.venv/bin/samplemark
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
