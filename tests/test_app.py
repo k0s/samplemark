@@ -44,3 +44,16 @@ def test_capture_down_offers_restart(make_manager):
     page = client.get("/")
     assert "DOWN" in page.text and "Restart capture" in page.text
     assert "running" in client.post("/restart").text
+
+
+def test_required_fields_are_marked(make_manager):
+    m = make_manager()
+    client = TestClient(create_app(m))
+    page = client.get("/").text
+    assert page.count('class="req"') == 1          # Title
+    client.post("/start", data={"title": "Alien"})
+    m.session.buffer.write(seconds(2))
+    client.post("/mark")
+    page = client.post("/end").text
+    assert page.count('class="req"') == 1          # Text
+    assert "(required)" in page
