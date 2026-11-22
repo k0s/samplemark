@@ -187,13 +187,19 @@ class Manager:
         with self._lock:
             s = self.session
             if s is None:
-                return {"active": False, "title": None,
-                        "capture_alive": False, "position": None}
-            position = None
+                return {"active": False, "title": None, "capture_alive": False,
+                        "position": None, "position_s": None,
+                        "elapsed": None, "elapsed_s": None}
+            now = self._clock()
+            elapsed = int(now - s.started)
+            position_s = None
             if s.sync_position is not None:
-                position = format_position(s.sync_position + self._clock() - s.sync_wall)
+                position_s = int(s.sync_position + now - s.sync_wall)
             return {"active": True, "title": s.title,
-                    "capture_alive": s.capture.alive, "position": position}
+                    "capture_alive": s.capture.alive,
+                    "position": None if position_s is None else format_position(position_s),
+                    "position_s": position_s,
+                    "elapsed": format_position(elapsed), "elapsed_s": elapsed}
 
     def marked_at(self, client: str) -> str | None:
         with self._lock:

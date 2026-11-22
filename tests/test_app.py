@@ -57,3 +57,13 @@ def test_required_fields_are_marked(make_manager):
     page = client.post("/end").text
     assert page.count('class="req"') == 1          # Text
     assert "(required)" in page
+
+
+def test_running_time_shown_and_ticks(make_manager, clock):
+    m = make_manager()
+    client = TestClient(create_app(m))
+    client.post("/start", data={"title": "Alien"})
+    clock.t += 90
+    page = client.get("/").text
+    assert 'Running <span class="tick" data-seconds="90">0:01:30</span>' in page
+    assert "setInterval" in page
