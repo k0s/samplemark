@@ -42,7 +42,7 @@ input, textarea { font-size: 1.1rem; width: 100%; box-sizing: border-box; margin
 {% if pending %}
 <form method="post" action="/finish">
   <p>Clip: {{ pending.seconds }} s{% if pending.truncated %} (start was cut off){% endif %}</p>
-  <label><b>Text</b> <span class="req">* (required)</span> <textarea name="text" required></textarea></label>
+  <label>Text <textarea name="text" placeholder="the words, or what it is"></textarea></label>
   <label>Tags (comma-separated; key=value allowed) <input name="tags"></label>
   <button class="save">Keep clip</button>
 </form>

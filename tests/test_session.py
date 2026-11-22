@@ -78,7 +78,7 @@ def test_media_position_from_sync(make_manager, clock):
     assert m.status()["position"] == "1:00:10"
 
 
-def test_text_required_and_write_failure_keeps_clip(make_manager, tmp_path):
+def test_write_failure_keeps_clip(make_manager, tmp_path):
     blocker = tmp_path / "file"
     blocker.write_text("not a directory")
     m = make_manager(outdir=blocker)
@@ -86,11 +86,19 @@ def test_text_required_and_write_failure_keeps_clip(make_manager, tmp_path):
     m.session.buffer.write(seconds(2))
     m.mark("a")
     m.end("a")
-    with pytest.raises(SessionError, match="Text is required"):
-        m.finish("a", "  ", [])
     with pytest.raises(OSError):
         m.finish("a", "line", [])
     assert m.pending_info("a") is not None
+
+
+def test_text_is_optional(make_manager):
+    m = make_manager()
+    m.start("Alien")
+    m.session.buffer.write(seconds(2))
+    m.mark("a")
+    m.end("a")
+    path = m.finish("a", "  ", [])
+    assert json.loads(path.with_suffix(".json").read_text())["text"] == ""
 
 
 def test_one_session_at_a_time_and_title_required(make_manager):
