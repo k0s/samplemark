@@ -13,7 +13,6 @@ from .session import Manager, SessionError
 
 TEMPLATES = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 CLIENT_COOKIE = "samplemark_client"
-NAME_COOKIE = "samplemark_name"
 YEAR = 365 * 24 * 3600
 
 Text = Annotated[str, Form()]
@@ -47,19 +46,12 @@ def create_app(manager: Manager) -> FastAPI:
         client = request.cookies.get(CLIENT_COOKIE) or uuid.uuid4().hex
         context = {
             "msg": msg, "error": error,
-            "name": request.cookies.get(NAME_COOKIE),
             "status": manager.status(),
             "marked": manager.marked_at(client),
             "pending": manager.pending_info(client),
         }
         response = TEMPLATES.TemplateResponse(request, "page.html", context)
         response.set_cookie(CLIENT_COOKIE, client, max_age=YEAR, samesite="lax")
-        return response
-
-    @app.post("/name")
-    def name(name: Text):
-        response = _back(msg=f"Hello, {name.strip()}.")
-        response.set_cookie(NAME_COOKIE, name.strip(), max_age=YEAR, samesite="lax")
         return response
 
     @app.post("/start")
@@ -83,11 +75,10 @@ def create_app(manager: Manager) -> FastAPI:
     @app.post("/finish")
     def finish(request: Request, text: Text = "", tags: Text = ""):
         tag_list = [t.strip() for t in tags.split(",") if t.strip()]
-        marked_by = request.cookies.get(NAME_COOKIE, "")
         saved = []
 
         def keep():
-            saved.append(manager.finish(client_of(request), marked_by, text, tag_list))
+            saved.append(manager.finish(client_of(request), text, tag_list))
 
         response = act(keep, "Saved.")
         return response if not saved else _back(msg=f"Saved {saved[0].name}.")

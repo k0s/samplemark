@@ -128,8 +128,7 @@ class Manager:
             pcm, _, truncated = s.buffer.slice(start, end)
             s.pending[client] = Pending(pcm, truncated, marked_wall, saved_wall)
 
-    def finish(self, client: str, marked_by: str, text: str,
-               tags: list[str]) -> Path:
+    def finish(self, client: str, text: str, tags: list[str]) -> Path:
         with self._lock:
             s = self._require()
             text = text.strip()
@@ -140,7 +139,6 @@ class Manager:
                 raise SessionError("Nothing to keep: tap Mark, then Save.")
             sidecar = {
                 "session": {"title": s.title, "started": _iso(s.started), "meta": s.meta},
-                "marked_by": marked_by,
                 "marked": _iso(p.marked_wall),
                 "saved": _iso(p.saved_wall),
                 "preroll_s": self.preroll,
