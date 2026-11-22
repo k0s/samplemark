@@ -17,8 +17,9 @@ publish or edit.
 2. **Mark.** The clip starts here, minus a pre-roll (default 5 s), because people
    tap after the line has begun.
 3. **Save.** The clip ends here, plus a short post-roll (default 1 s). A form asks
-   for the clip's details; **text** (the words spoken, or a description) is the one
-   that matters, for searching later. Optional tags. Then back to Mark.
+   for the clip's details, all optional: **text** (the words spoken, or a
+   description), which is what later searches use, and tags. (Text was required
+   until 2026-11-22.) Then back to Mark.
 4. Repeat Mark → Save as often as wanted.
 5. **Stop.** Recording ends and the buffer is discarded. A session also stops by
    itself after a limit (default 4 h), in case nobody taps Stop.

@@ -55,8 +55,10 @@ def test_required_fields_are_marked(make_manager):
     m.session.buffer.write(seconds(2))
     client.post("/mark")
     page = client.post("/end").text
-    assert page.count('class="req"') == 1          # Text
-    assert "(required)" in page
+    assert page.count('class="req"') == 0          # Text is optional
+    assert "Keep clip" in page
+    page = client.post("/finish", data={"text": ""}).text
+    assert "Saved" in page
 
 
 def test_running_time_shown_and_ticks(make_manager, clock):

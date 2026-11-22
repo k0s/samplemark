@@ -132,8 +132,6 @@ class Manager:
         with self._lock:
             s = self._require()
             text = text.strip()
-            if not text:
-                raise SessionError("Text is required.")
             p = s.pending.get(client)
             if p is None:
                 raise SessionError("Nothing to keep: tap Mark, then Save.")
