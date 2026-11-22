@@ -12,6 +12,7 @@ input, textarea { font-size: 1.1rem; width: 100%; box-sizing: border-box; margin
 .save { background: #393; color: #fff; }
 .msg { background: #eef; padding: .5rem; }
 .err { background: #fdd; padding: .5rem; }
+.req { color: #c00; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -21,7 +22,7 @@ input, textarea { font-size: 1.1rem; width: 100%; box-sizing: border-box; margin
 
 {% if not status.active %}
 <form method="post" action="/start">
-  <label>Title <input name="title" required></label>
+  <label><b>Title</b> <span class="req">* (required)</span> <input name="title" required></label>
   <label>Year <input name="year"></label>
   <label>Type <input name="kind" placeholder="film, show, podcast…"></label>
   <label>Notes <textarea name="notes"></textarea></label>
@@ -40,7 +41,7 @@ input, textarea { font-size: 1.1rem; width: 100%; box-sizing: border-box; margin
 {% if pending %}
 <form method="post" action="/finish">
   <p>Clip: {{ pending.seconds }} s{% if pending.truncated %} (start was cut off){% endif %}</p>
-  <label>Text <textarea name="text" required></textarea></label>
+  <label><b>Text</b> <span class="req">* (required)</span> <textarea name="text" required></textarea></label>
   <label>Tags (comma-separated; key=value allowed) <input name="tags"></label>
   <button class="save">Keep clip</button>
 </form>
