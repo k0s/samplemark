@@ -112,8 +112,9 @@ def test_stop_and_limit(make_manager, clock):
     assert m.session is None and capture.stopped
     with pytest.raises(SessionError, match="No session"):
         m.mark("a")
-    assert m.status() == {"active": False, "title": None,
-                          "capture_alive": False, "position": None}
+    assert m.status() == {"active": False, "title": None, "capture_alive": False,
+                          "position": None, "position_s": None,
+                          "elapsed": None, "elapsed_s": None}
 
 
 def test_restart_capture_keeps_buffer(make_manager):
@@ -134,3 +135,13 @@ def test_discard(make_manager):
     m.mark("a")
     m.discard("a")
     assert m.marked_at("a") is None
+
+
+def test_status_running_time(make_manager, clock):
+    m = make_manager()
+    clock.t = 1000.0
+    m.start("Alien", position="0:10:00")
+    clock.t = 1000.0 + 3725
+    status = m.status()
+    assert (status["elapsed"], status["elapsed_s"]) == ("1:02:05", 3725)
+    assert status["position_s"] == 600 + 3725

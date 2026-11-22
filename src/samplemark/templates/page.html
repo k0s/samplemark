@@ -32,8 +32,9 @@ input, textarea { font-size: 1.1rem; width: 100%; box-sizing: border-box; margin
 
 {% else %}
 <h2>{{ status.title }}</h2>
-<p>Capture: {{ "running" if status.capture_alive else "DOWN" }}
-{% if status.position %} · position ≈ {{ status.position }}{% endif %}</p>
+<p>Running <span class="tick" data-seconds="{{ status.elapsed_s }}">{{ status.elapsed }}</span>
+{% if status.position %} · position ≈ <span class="tick" data-seconds="{{ status.position_s }}">{{ status.position }}</span>{% endif %}</p>
+<p>Capture: {{ "running" if status.capture_alive else "DOWN" }}</p>
 {% if not status.capture_alive %}
 <form method="post" action="/restart"><button>Restart capture</button></form>
 {% endif %}
@@ -59,6 +60,20 @@ input, textarea { font-size: 1.1rem; width: 100%; box-sizing: border-box; margin
   <button>Sync</button>
 </form>
 <form method="post" action="/stop"><button>Stop session</button></form>
+{% endif %}
+{% if status.active %}
+<script>
+// Count the running time (and position estimate) up from the server's values.
+const loaded = Date.now();
+const pad = n => String(n).padStart(2, "0");
+const fmt = s => `${Math.floor(s / 3600)}:${pad(Math.floor(s % 3600 / 60))}:${pad(s % 60)}`;
+setInterval(() => {
+  const extra = Math.floor((Date.now() - loaded) / 1000);
+  for (const el of document.querySelectorAll(".tick")) {
+    el.textContent = fmt(Number(el.dataset.seconds) + extra);
+  }
+}, 1000);
+</script>
 {% endif %}
 </body>
 </html>
