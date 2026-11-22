@@ -19,13 +19,7 @@ input, textarea { font-size: 1.1rem; width: 100%; box-sizing: border-box; margin
 {% if msg %}<p class="msg">{{ msg }}</p>{% endif %}
 {% if error %}<p class="err">{{ error }}</p>{% endif %}
 
-{% if not name %}
-<form method="post" action="/name">
-  <label>Your name <input name="name" required></label>
-  <button>OK</button>
-</form>
-
-{% elif not status.active %}
+{% if not status.active %}
 <form method="post" action="/start">
   <label>Title <input name="title" required></label>
   <label>Year <input name="year"></label>

@@ -27,7 +27,7 @@ def test_full_clip(make_manager, clock, tmp_path):
     m.session.buffer.write(seconds(3))
     m.end("phone-a")
     assert m.pending_info("phone-a") == {"seconds": 8.0, "truncated": False}
-    path = m.finish("phone-a", "J", "In space no one can hear you scream", ["eerie"])
+    path = m.finish("phone-a", "In space no one can hear you scream", ["eerie"])
     date = datetime.fromtimestamp(clock.t).strftime("%Y-%m-%d")
     assert path == tmp_path / "inbox" / f"{date}_alien_001.wav"
     with wave.open(str(path)) as w:
@@ -35,7 +35,7 @@ def test_full_clip(make_manager, clock, tmp_path):
     sidecar = json.loads(path.with_suffix(".json").read_text())
     assert sidecar["session"]["title"] == "Alien"
     assert sidecar["session"]["meta"] == {"year": "1979"}
-    assert sidecar["marked_by"] == "J"
+    assert "marked_by" not in sidecar
     assert sidecar["text"] == "In space no one can hear you scream"
     assert sidecar["tags"] == ["eerie"]
     assert sidecar["truncated"] is False
@@ -70,7 +70,7 @@ def test_media_position_from_sync(make_manager, clock):
     clock.t = 1100.0
     m.mark("a")
     m.end("a")
-    path = m.finish("a", "J", "line", [])
+    path = m.finish("a", "line", [])
     assert json.loads(path.with_suffix(".json").read_text())["media_position"] == "0:11:35"
     clock.t = 2000.0
     m.sync("1:00:00")
@@ -87,9 +87,9 @@ def test_text_required_and_write_failure_keeps_clip(make_manager, tmp_path):
     m.mark("a")
     m.end("a")
     with pytest.raises(SessionError, match="Text is required"):
-        m.finish("a", "J", "  ", [])
+        m.finish("a", "  ", [])
     with pytest.raises(OSError):
-        m.finish("a", "J", "line", [])
+        m.finish("a", "line", [])
     assert m.pending_info("a") is not None
 
 

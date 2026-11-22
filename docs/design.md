@@ -24,7 +24,8 @@ publish or edit.
    itself after a limit (default 4 h), in case nobody taps Stop.
 
 Each phone has its own Mark (kept per browser, by cookie), so two people can mark
-overlapping moments. The page asks once for a name to record as `marked_by`.
+overlapping moments. Who marked a clip isn't recorded (dropped 2026-11-22: a name
+page before every first use cost more than the attribution was worth).
 
 ### Media position
 
@@ -65,7 +66,6 @@ pw-record (sink monitor) ──raw PCM──▶ ring buffer ◀── web app (p
 ```json
 {
   "session": {"title": "...", "started": "2026-11-17T20:31:05-08:00", "meta": {}},
-  "marked_by": "...",
   "marked": "2026-11-17T21:02:14-08:00",
   "saved": "2026-11-17T21:02:22-08:00",
   "preroll_s": 5, "postroll_s": 1,
